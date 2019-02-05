@@ -8,7 +8,7 @@
       </slot>
       <slot></slot>
       <slot name="bottom">
-        <div class="garen-load-footer">
+        <div class="garen-loadmore-footer">
           <div>{{bottomText}}</div>
         </div>
       </slot>

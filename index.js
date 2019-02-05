@@ -1,10 +1,18 @@
-import Vue from 'vue'
+import Vue from 'vue';
+import router from './demo/router.js';
+import App from './demo/App.vue';
 import './tools/rem.js'
-// import HelloWord from './src/components/HelloWord.vue'
-// import HelloWord from './dist/main.js';
-import HelloWord from './src/index.js'
-Vue.use(HelloWord)
-// Vue.component('hello-word',HelloWord)
+import './tools/reset.css'
+
+import garen from './src/index.js'
+
+Vue.use(garen)
+
+Vue.config.productionTip = false
+
 new Vue({
-    el:'#app',
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>'
 })

@@ -1,31 +1,29 @@
+
 <template>
   <div>
-    upload
+app
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-  },
-  data() {
+  data () {
     return {
-
+        
     };
   },
-  components: {},
-  computed: {
-  },
-  watch: {
 
-  },
-  mounted() {
- 
-  },
+  components: {},
+
+  computed: {},
+
+  mounted(){},
+
   methods: {
 
   }
-};
+}
+
 </script>
 <style scoped>
 
