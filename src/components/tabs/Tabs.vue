@@ -1,29 +1,30 @@
-
 <template>
   <div>
-
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  props: {
+  },
+  data() {
     return {
-        
+
     };
   },
-
   components: {},
+  computed: {
+  },
+  watch: {
 
-  computed: {},
-
-  mounted(){},
-
+  },
+  mounted() {
+ 
+  },
   methods: {
 
   }
-}
-
+};
 </script>
 <style scoped>
 
