@@ -4,10 +4,11 @@
     <!-- 注意：quick-loadmore要求外面包裹容器(本例#app)
     的高度固定且overflow:hidden,并且quick-loadmore内部数据的高度要大于包裹容器的高度,
     才能触发quick-loadmore的上拉加载功能 -->
-        <garen-loadmore :top-method="handleTop" ref="vueLoad" 
-                        :top-status-change="handleStatusChange" 
+        <garen-loadmore @top-method="handleTop" ref="vueLoad" 
+                        :top-change-text="topChangeText"
+                        @top-status-change="handleStatusChange" 
                         :bottom-method="handleBottom" 
-                        :bottom-status-change="handleBottomStatusChange" 
+                        @bottom-status-change="handleBottomStatusChange" 
                         :disable-top="false" :disable-bottom="false">
             <div class="item" v-for="(item,index) in dataList" :key="index">{{index}}</div>
         </garen-loadmore>
@@ -19,6 +20,8 @@ export default {
   name: "Message",
   data() {
     return {
+      topChangeText:{
+      },  
       dataList: [1, 2, 3, 4, 5]
     };
   },

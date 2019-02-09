@@ -18,15 +18,17 @@
 
 <script>
 const TOPSTATUS = {
-  wait: "wait",
-  pulling: "pulling",
-  limit: "limit",
-  loading: "loading"
+  wait: "wait", // 等待
+  pulling: "pulling", // 下拉
+  limit: "limit", // 超过触发值
+  loading: "loading", // 正在加载
+  complete: "templete" // 刷新完成
 };
 const BOTTOMSTATUS = {
-  wait: "wait",
-  loading: "loading",
-  nodata: "nodata"
+  wait: "wait", // 等待
+  loading: "loading", // 正在加载
+  nodata: "nodata", // 暂无数据
+  error: "error" // 错误
 };
 export default {
   props: {
@@ -50,24 +52,14 @@ export default {
       type: Number,
       default: 100
     },
-    // 下拉触发方法
-    topMethod: {
-      type: Function,
+    // 下拉刷新状态提示
+    topChangeText: {
+      type: Object,
       default() {
-        return function() {
-          console.log("topmethod");
-        };
+        return {};
       }
     },
-    // 下拉刷新状态改变
-    topStatusChange: {
-      type: Function,
-      default() {
-        return function() {
-          console.log("topStatusChange");
-        };
-      }
-    },
+
     // 禁止上拉加载
     disableBottom: {
       type: Boolean,
@@ -85,18 +77,25 @@ export default {
         return function() {};
       }
     },
-    // 上拉刷新状态改变
-    bottomStatusChange: {
+    // 上拉加载状态提示
+    bottomChangeText: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    // 上拉刷新出错，重新请求数据
+    bottomHandleError: {
       type: Function,
       default() {
         return function() {
-          console.log("topStatusChange");
+          console.log("bottomHandleError");
         };
       }
     },
     // scroll事件
-    eventScroll:{
-      type:Function
+    eventScroll: {
+      type: Function
     }
   },
   data() {
@@ -104,7 +103,7 @@ export default {
       startPositionTop: null,
       startScreenY: 0,
       endScreenY: 0,
-      topStatus: TOPSTATUS.wait, // 'wait'等待 , 'pulling'下拉,'limit'超过topDistance触发,'loading'正在loading
+      topStatus: TOPSTATUS.wait, 
       bottomOverflow: "auto",
       bottomStatus: BOTTOMSTATUS.wait
     };
@@ -114,13 +113,16 @@ export default {
     topText() {
       switch (this.topStatus) {
         case TOPSTATUS.pulling:
-          return "下拉刷新";
+          return this.topChangeText.pulling || "下拉刷新";
           break;
         case TOPSTATUS.limit:
-          return "释放刷新";
+          return this.topChangeText.limit || "释放刷新";
           break;
         case TOPSTATUS.loading:
-          return "正在刷新...";
+          return this.topChangeText.loading || "正在刷新...";
+          break;
+        case TOPSTATUS.complete:
+          return this.topChangeText.complete || "";
           break;
         default:
           return "";
@@ -129,10 +131,13 @@ export default {
     bottomText() {
       switch (this.bottomStatus) {
         case BOTTOMSTATUS.loading:
-          return "正在加载更多...";
+          return this.bottomChangeText.loading || "正在加载更多...";
           break;
         case BOTTOMSTATUS.nodata:
-          return "暂无更多数据";
+          return this.bottomChangeText.nodata || "暂无更多数据";
+          break;
+        case BOTTOMSTATUS.error:
+          return this.bottomChangeText.error || "数据请求出错，请点击重试";
           break;
         default:
           return "";
@@ -141,10 +146,12 @@ export default {
   },
   watch: {
     topStatus(next) {
-      this.topStatusChange(next);
+      // 下拉刷新状态改变
+      this.$emit('top-status-change',next)
     },
     bottomStatus(next) {
-      this.bottomStatusChange(next);
+      // 上拉加载状态改变
+      this.$emit('bottom-status-change',next)
     }
   },
   mounted() {
@@ -152,7 +159,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      this.eventScroll && this.eventScroll()
+      this.eventScroll && this.eventScroll();
       if (this.disableBottom) {
         return;
       }
@@ -164,10 +171,10 @@ export default {
       if (bDistance <= this.bottomDistance) {
         this.bottomStatus = BOTTOMSTATUS.loading;
         this.$nextTick(() => {
-          try{
+          // 移动端某些浏览器初始化控制台报错，不影响使用
+          try {
             this.$el.scrollTo(0, this.$el.scrollHeight);
-          }catch(e){
-          }
+          } catch (e) {}
           // this.$el.scrollTop = this.$el.scrollHeight
         });
         this.bottomMethod();
@@ -218,7 +225,6 @@ export default {
         return;
       }
       let screenY = e.touches[0].screenY;
-      this.endScreenY = screenY;
       let moveDistance = (screenY - this.startScreenY) / this.distanceIndex;
       if (
         this.$refs.content.getBoundingClientRect().top > this.startPositionTop
@@ -251,13 +257,17 @@ export default {
       if (this.topStatus === "loading") {
         return;
       }
+
+      let screenY = e.changedTouches[0].screenY
+
       if (
-        (this.endScreenY - this.startScreenY) / this.distanceIndex >=
+        (screenY - this.startScreenY) / this.distanceIndex >=
         this.topDistance
       ) {
         this.transformStyle(this.$refs.content, this.topLoadingDistance, true);
         this.topStatus = TOPSTATUS.loading;
-        this.topMethod();
+        // 下拉刷新触发方法
+        this.$emit('top-method');
         if (!this.disableBottom) {
           this.bottomStatus = BOTTOMSTATUS.wait;
         }
@@ -265,15 +275,13 @@ export default {
         this.topStatus = TOPSTATUS.wait;
         this.transformStyle(this.$refs.content, 0);
         this.startScreenY = 0;
-        this.endScreenY = 0;
       }
     },
     // 下拉数据加载完
     onTopLoaded() {
       this.transformStyle(this.$refs.content, 0, true);
-      this.topStatus = TOPSTATUS.wait;
+      this.topStatus = TOPSTATUS.complete;
       this.startScreenY = 0;
-      this.endScreenY = 0;
     },
     // 上拉数据加载完
     onBottomLoaded(flag = true) {
