@@ -1,14 +1,15 @@
 
 <template>
   <div class="container">
-    <!-- 注意：quick-loadmore要求外面包裹容器(本例#app)
-    的高度固定且overflow:hidden,并且quick-loadmore内部数据的高度要大于包裹容器的高度,
-    才能触发quick-loadmore的上拉加载功能 -->
-        <garen-loadmore @top-method="handleTop" ref="vueLoad" 
+    <!-- 注意：garen-loadmore要求外面包裹容器(本例#app)
+    的高度固定且overflow:hidden,并且garen-loadmore内部数据的高度要大于包裹容器的高度,
+    才能触发garen-loadmore的上拉加载功能 -->
+        <garen-loadmore @top-method="handleTop" ref="vueLoad" class="loadmore"
                         :top-change-text="topChangeText"
                         @top-status-change="handleStatusChange" 
-                        :bottom-method="handleBottom" 
+                        @bottom-method="handleBottom" 
                         @bottom-status-change="handleBottomStatusChange" 
+                        @bottom-error-click="handleBottomError"
                         :disable-top="false" :disable-bottom="false">
             <div class="item" v-for="(item,index) in dataList" :key="index">{{index}}</div>
         </garen-loadmore>
@@ -16,12 +17,22 @@
 </template>
 
 <script>
+
 export default {
   name: "Message",
   data() {
     return {
       topChangeText:{
+        pulling:"下拉刷新",
+        limit:"释放刷新",
+        loading:"正在刷新...",
+        complete:"  ",   // 刷新完成暂不提示
       },  
+      bottomChangeText:{
+        loading:"正在加载更多...",
+        nodata:"暂无更多数据",
+        error:"请求数据出错，请点击重试",
+      },
       dataList: [1, 2, 3, 4, 5]
     };
   },
@@ -92,6 +103,9 @@ export default {
         // 数据跟新完调用该方法使数据加载中提示消失，(注意:如果没有更多数据参数传false: this.$refs.vueLoad.onBottomLoaded(false))
         this.$refs.vueLoad.onBottomLoaded();
       }, 1000);
+    },
+    handleBottomError(){
+        this.handleBottom()
     }
   },
   mounted() {
@@ -105,11 +119,16 @@ export default {
     height:100%;
     width:100%;
     overflow: hidden;
+    background: #f5f5f5;
 }
 .item{
-    height:200px;
-    background: lightgray;
-    border:2px solid green;
+    height:150px;
+    margin-bottom:20px;
+    background: #fff;
     overflow: hidden;
+}
+/* 注意：伪类选择最后一项是nth-last-of-type(2)不是(1) */
+.item:nth-last-of-type(2){
+    margin-bottom:0;
 }
 </style>

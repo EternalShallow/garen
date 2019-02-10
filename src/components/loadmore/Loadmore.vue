@@ -8,7 +8,7 @@
       </slot>
       <slot></slot>
       <slot name="bottom">
-        <div class="garen-loadmore-footer">
+        <div class="garen-loadmore-footer" v-if="!disableBottom" @click="onBottomErrorClick">
           <div>{{bottomText}}</div>
         </div>
       </slot>
@@ -31,6 +31,7 @@ const BOTTOMSTATUS = {
   error: "error" // 错误
 };
 export default {
+  name:'Loadmore',
   props: {
     // 禁止下拉刷新
     disableTop: {
@@ -70,27 +71,11 @@ export default {
       type: Number,
       default: 10
     },
-    // 上拉加载方法
-    bottomMethod: {
-      type: Function,
-      default() {
-        return function() {};
-      }
-    },
     // 上拉加载状态提示
     bottomChangeText: {
       type: Object,
       default() {
         return {};
-      }
-    },
-    // 上拉刷新出错，重新请求数据
-    bottomHandleError: {
-      type: Function,
-      default() {
-        return function() {
-          console.log("bottomHandleError");
-        };
       }
     },
     // scroll事件
@@ -103,7 +88,7 @@ export default {
       startPositionTop: null,
       startScreenY: 0,
       endScreenY: 0,
-      topStatus: TOPSTATUS.wait, 
+      topStatus: TOPSTATUS.wait,
       bottomOverflow: "auto",
       bottomStatus: BOTTOMSTATUS.wait
     };
@@ -137,7 +122,7 @@ export default {
           return this.bottomChangeText.nodata || "暂无更多数据";
           break;
         case BOTTOMSTATUS.error:
-          return this.bottomChangeText.error || "数据请求出错，请点击重试";
+          return this.bottomChangeText.error || "请求数据出错，请点击重试";
           break;
         default:
           return "";
@@ -147,11 +132,11 @@ export default {
   watch: {
     topStatus(next) {
       // 下拉刷新状态改变
-      this.$emit('top-status-change',next)
+      this.$emit("top-status-change", next);
     },
     bottomStatus(next) {
       // 上拉加载状态改变
-      this.$emit('bottom-status-change',next)
+      this.$emit("bottom-status-change", next);
     }
   },
   mounted() {
@@ -177,7 +162,7 @@ export default {
           } catch (e) {}
           // this.$el.scrollTop = this.$el.scrollHeight
         });
-        this.bottomMethod();
+        this.$emit('bottom-method');
       }
     },
     // 获得滚动距离
@@ -258,7 +243,7 @@ export default {
         return;
       }
 
-      let screenY = e.changedTouches[0].screenY
+      let screenY = e.changedTouches[0].screenY;
 
       if (
         (screenY - this.startScreenY) / this.distanceIndex >=
@@ -267,7 +252,7 @@ export default {
         this.transformStyle(this.$refs.content, this.topLoadingDistance, true);
         this.topStatus = TOPSTATUS.loading;
         // 下拉刷新触发方法
-        this.$emit('top-method');
+        this.$emit("top-method");
         if (!this.disableBottom) {
           this.bottomStatus = BOTTOMSTATUS.wait;
         }
@@ -289,6 +274,17 @@ export default {
         this.bottomStatus = BOTTOMSTATUS.wait;
       } else {
         this.bottomStatus = BOTTOMSTATUS.nodata;
+      }
+    },
+    // 上拉数据出错
+    onBottomError() {
+      this.bottomStatus = BOTTOMSTATUS.error;
+    },
+    // 出错时，点击重新加载数据
+    onBottomErrorClick() {
+      if (this.bottomStatus === BOTTOMSTATUS.error) {
+        this.bottomStatus = BOTTOMSTATUS.loading;
+        this.$emit("bottom-error-click");
       }
     },
     // 动画

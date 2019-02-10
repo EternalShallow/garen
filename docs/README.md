@@ -11,4 +11,10 @@ features:
 - title: 使用方便
   details: 组件API严格统一，符合vue开发规范。
 footer: MIT Licensed | Copyright © 2018-present duyanpeng
+meta:
+  - name: description
+    content: 盖伦UI,一套vue移动端组件库。
+  - name: keywords
+    content: garen,盖伦ui,garenui,vue,组件库,移动端,vue移动端组件库,vue移动端,ui
+---
 ---

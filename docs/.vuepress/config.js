@@ -16,20 +16,23 @@ module.exports = {
           ]
         },
         {
+          title: '组件',
+          collapsable: false,
+          children: [ 
+            ['/components/loadmore/','刷新加载'],
+            ['/components/picker/','滚动选择'],
+            ['/components/upload/','图片上传'],
+            ['/components/cropper/','头像裁剪'],
+            ['/components/tabs/','选项卡'],
+            ['/components/swiper/','轮播图'],
+           ]
+        },
+        {
           title: '代码片段',
           children: [ 
             ['/','css'],
             ['/','js'],
             ['/','推荐插件'],
-           ]
-        },
-        {
-          title: '组件',
-          collapsable: false,
-          children: [ 
-            ['/','刷新加载'],
-            ['/','日期选择'],
-            ['/','头像裁剪'],
            ]
         }
       ]

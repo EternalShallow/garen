@@ -8,6 +8,8 @@ import garen from './src/index.js'
 
 Vue.use(garen)
 
+// import {Loadmore} from './src/index.js'
+// Vue.component('garen-loadmore',Loadmore)
 Vue.config.productionTip = false
 
 new Vue({

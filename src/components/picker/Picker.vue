@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "VueQuickPicker",
+  name: "Picker",
   props: {
     data: {
       default: function() {

@@ -7,6 +7,7 @@
 <script>
 import exif from "exif-js";
 export default {
+  name:'Cropper',
   props: {
     imgSrc: {},
     imgType: {

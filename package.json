@@ -1,6 +1,6 @@
 {
   "name": "garen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "盖伦UI，vue移动端组件库",
   "main": "dist/main.js",
   "module": "src/index.js",
