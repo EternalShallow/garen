@@ -172,6 +172,7 @@ export default {
       } else {
         return;
       }
+
       // 清空选中的active样式
       [...this.$refs.parent.children[index].children].forEach(item => {
         item.className = "garen-picker-item";
@@ -180,19 +181,19 @@ export default {
       const touch = e.touches[0];
       const touchY = touch.screenY;
       // 记录开始触摸时距屏幕顶端距离
-      target.setAttribute("address-start", touchY);
+      target.setAttribute("touch-start", touchY);
       target.setAttribute("ismove", false); // 是否触发
       // 记录开始触摸时间
       const timestamp = new Date().getTime();
       target.setAttribute("start-time", timestamp);
       // 判断是否是第一次触摸
-      if (!target.getAttribute("mov-distance")) {
+      if (!target.getAttribute("touch-end")) {
         // 存储当前位置
         target.setAttribute("pos-start", touchY);
       } else {
         target.setAttribute(
           "pos-start",
-          touchY - parseFloat(target.getAttribute("mov-distance"))
+          touchY - parseFloat(target.getAttribute("touch-end"))
         );
       }
       target.style.transitionDuration = "0ms";
@@ -210,7 +211,7 @@ export default {
       const touchY = touch.screenY;
       // 获取移动距离
       const moveDistance = touchY - target.getAttribute("pos-start");
-      target.setAttribute("pos-end", touchY);
+
       target.setAttribute("address-end", touchY);
       target.setAttribute("ismove", true); // 是否触发
       // 移动
@@ -226,16 +227,16 @@ export default {
       } else {
         return;
       }
-      const touchY = target.getAttribute("pos-end");
+      const touchY = e.changedTouches[0].screenY 
       const moveDistance = touchY - target.getAttribute("pos-start");
       // 判断应该移动多少个li
       let index = Math.abs(Math.round(moveDistance / step));
       // 记录移动的距离
       const absDistance =
-        parseFloat(target.getAttribute("address-start")) -
+        parseFloat(target.getAttribute("touch-start")) -
         parseFloat(
           target.getAttribute("address-end") ||
-            target.getAttribute("address-start")
+            target.getAttribute("touch-start")
         );
       const timestamp = new Date().getTime();
       // 记录间隔时间
@@ -280,19 +281,19 @@ export default {
     },
     // 控制最后的滚动
     endMove(target, index = 0, step, moveDistance = 0, order = 0, speed = 200) {
-      target.setAttribute("mov-distance", -index * step);
+      target.setAttribute("touch-end", -index * step);
       this.transformStyle(target, -index * step, true, speed);
       // 上边界判断
       if (moveDistance > 0 * step) {
         index = 0;
         this.transformStyle(target, index * step);
-        target.setAttribute("mov-distance", index * step);
+        target.setAttribute("touch-end", index * step);
       }
       // 下边界判断
       if (moveDistance < -(this.data[order].values.length - 1) * step) {
         index = this.data[order].values.length - 1;
         this.transformStyle(target, -index * step);
-        target.setAttribute("mov-distance", -index * step);
+        target.setAttribute("touch-end", -index * step);
       }
       this.value[order] = index;
       this.addClass(order, index);
