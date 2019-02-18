@@ -1,6 +1,11 @@
 <template>
-  <div>
-    upload
+  <div @click="handleUpload">
+    <input 
+      :style="{height:0,width:0,display:'none',overflow:'hidden'}" 
+      ref="garenUpload" type="file" :accept="accept" :capture:="capture" :multiple="multiple"
+      @change="handleChange"
+      >
+    <slot></slot>
   </div>
 </template>
 
@@ -8,6 +13,18 @@
 export default {
   name:'Upload',
   props: {
+    accept:{
+      default:'',
+      type:String
+    },
+    capture:{
+      default:'',
+      type:String
+    },
+    multiple:{
+      default:false,
+      type:Boolean
+    }
   },
   data() {
     return {
@@ -24,7 +41,15 @@ export default {
  
   },
   methods: {
-
+    handleUpload(){
+      const upload = this.$refs.garenUpload
+      upload.click()
+    },
+    handleChange(){
+      const upload = this.$refs.garenUpload
+      const file = upload.files
+      this.$emit('change',file)
+    }
   }
 };
 </script>
