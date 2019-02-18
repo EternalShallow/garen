@@ -1,7 +1,7 @@
 
 <template>
   <div>
-<garen-picker :data="data" @change="handleChange" ref="picker"></garen-picker>
+   <garen-picker :data="data" @change="handleChange" ref="picker"></garen-picker>
   </div>
 </template>
 

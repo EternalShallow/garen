@@ -3,7 +3,9 @@
     <div class="garen-picker-line-top"></div>
     <div class="garen-picker-content" ref="parent">
       <ul class="garen-picker-list" v-for="(list,index) in data" :key="index" @touchstart.stop="onTouchStart($event,index)" @touchmove.stop="onTouchMove($event,index)" @touchend.stop="onTouchEnd($event,index)" :style="{textAlign: list.textAlign || 'center',flex:list.flex || 1}">
-        <li class="garen-picker-item" v-for="(item,number)  in list.values" :data-index="number" :key="number">{{list.valueKey ? item[list.valueKey]:item}}</li>
+        <li class="garen-picker-item" v-for="(item,number)  in list.values" :class="{'garen-picker-item-active':activeIndex[index] == number,
+          'garen-picker-item-next':wheelStyle && (number == activeIndex[index] -1 || number == activeIndex[index] +1),
+          'garen-picker-item-far':wheelStyle && (number == activeIndex[index] -2 || number == activeIndex[index] +2)}" :data-index="number" :key="number">{{list.valueKey ? item[list.valueKey]:item}}</li>
       </ul>
     </div>
     <div class="garen-picker-line-bottom"></div>
@@ -11,6 +13,7 @@
 </template>
 
 <script>
+// TODO:整体变量名，API优化
 export default {
   name: "Picker",
   props: {
@@ -46,7 +49,8 @@ export default {
     return {
       timer: "",
       value: [],
-      lastValue: [] // 记录上一次的value值判断是否触发change事件
+      lastValue: [], // 记录上一次的value值判断是否触发change事件
+      activeIndex: []
     };
   },
   components: {},
@@ -76,38 +80,23 @@ export default {
         order
       );
     },
+
     // 通过索引找到对应数据
     computeValue(value) {
       return value.map((item, index) => {
         return this.data[index].values[item];
       });
     },
-    // 给选中的picker加active类名
-    addClass(order, index, num = 2) {
+
+    // 改变类名样式
+    changeActiveIndex(order, index) {
       this.$nextTick(() => {
-        // 初始化时，children[index-1]会报错
-        try {
-          if (this.wheelStyle) {
-            if (this.$refs.parent.children[order].children[index + 1])
-              this.$refs.parent.children[order].children[index + 1].className =
-                "garen-picker-item garen-picker-item-next";
-            if (this.$refs.parent.children[order].children[index - 1])
-              this.$refs.parent.children[order].children[index - 1].className =
-                "garen-picker-item garen-picker-item-next";
-            if (this.$refs.parent.children[order].children[index + 2])
-              this.$refs.parent.children[order].children[index + 2].className =
-                "garen-picker-item garen-picker-item-far";
-            if (this.$refs.parent.children[order].children[index - 2])
-              this.$refs.parent.children[order].children[index - 2].className =
-                "garen-picker-item garen-picker-item-far";
-          }
-          this.$refs.parent.children[order].children[index].className =
-            "garen-picker-item garen-picker-item-active";
-        } catch (e) {
-         // console.warn(e.message, "vue-simple-picker");
-        }
+        const activeIndex = this.activeIndex;
+        activeIndex[order] = index;
+        this.activeIndex = activeIndex;
       });
     },
+
     // 设置picker的值
     setPickerValue(index, defaultValue) {
       this.endMove(
@@ -129,7 +118,7 @@ export default {
             0,
             which
           );
-          return
+          return;
         }
         [...this.$refs.parent.children].forEach((element, index) => {
           this.endMove(
@@ -153,7 +142,12 @@ export default {
      * transition:是否开启动画
      * timer:动画时间
      */
-    transformStyle(target, moveDistance, transition, timer = 200) {
+    transformStyle(
+      target,
+      moveDistance,
+      transition,
+      timer = 200,
+    ) {
       target.style["-webkit-transform"] =
         "translate3d(0," + moveDistance + "px,0)";
       target.style["transform"] = "translate3d(0," + moveDistance + "px,0)";
@@ -161,7 +155,7 @@ export default {
         target.style.transitionDuration = timer + "ms";
       }
     },
-    
+
     // 触摸开始
     onTouchStart(e, index) {
       e.preventDefault();
@@ -177,7 +171,7 @@ export default {
       [...this.$refs.parent.children[index].children].forEach(item => {
         item.className = "garen-picker-item";
       });
-      
+
       const touch = e.touches[0];
       const touchY = touch.screenY;
       // 记录开始触摸时距屏幕顶端距离
@@ -185,7 +179,7 @@ export default {
       target.setAttribute("ismove", false); // 是否触发
       // 记录开始触摸时间
       const timestamp = new Date().getTime();
-      target.setAttribute("start-time", timestamp);
+      target.setAttribute("touch-time", timestamp);
       // 判断是否是第一次触摸
       if (!target.getAttribute("touch-end")) {
         // 存储当前位置
@@ -212,9 +206,9 @@ export default {
       // 获取移动距离
       const moveDistance = touchY - target.getAttribute("pos-start");
 
-      target.setAttribute("address-end", touchY);
+      //  target.setAttribute("address-end", touchY);
       target.setAttribute("ismove", true); // 是否触发
-      // 移动
+      // 移动 TODO:滚动中样式
       this.transformStyle(target, moveDistance);
     },
     // 手指离开
@@ -227,21 +221,21 @@ export default {
       } else {
         return;
       }
-      const touchY = e.changedTouches[0].screenY 
+      const touchY = e.changedTouches[0].screenY;
       const moveDistance = touchY - target.getAttribute("pos-start");
       // 判断应该移动多少个li
       let index = Math.abs(Math.round(moveDistance / step));
       // 记录移动的距离
       const absDistance =
-        parseFloat(target.getAttribute("touch-start")) -
-        parseFloat(
-          target.getAttribute("address-end") ||
-            target.getAttribute("touch-start")
-        );
+        parseFloat(target.getAttribute("touch-start")) - touchY;
+      // parseFloat(
+      //     target.getAttribute("address-end") ||
+      //     target.getAttribute("touch-start")
+      // );
       const timestamp = new Date().getTime();
       // 记录间隔时间
       const timespace =
-        timestamp - parseFloat(target.getAttribute("start-time"));
+        timestamp - parseFloat(target.getAttribute("touch-time"));
       if (
         this.canClick &&
         (Math.abs(absDistance) <= 15 ||
@@ -251,14 +245,14 @@ export default {
         this.movePurpose(order, e.target.getAttribute("data-index"), target);
         return;
       }
+
       // 计算速度 = 距离/时间
       const rate = absDistance / timespace;
-      // console.log(rate,'rate')
       this.timer = rate * 6;
       if (Math.abs(this.timer) <= 2) {
         this.timer = 0;
       }
-      // 惯性滚动距离及速度
+      // 惯性滚动距离及速度 TODO:可优化
       index = Math.round(index + this.timer);
       let speed = 200;
       if (Math.abs(Math.floor(this.timer)) >= 2) {
@@ -270,43 +264,45 @@ export default {
       if (Math.abs(Math.floor(this.timer)) > 6) {
         speed = 800;
       }
+      // 边界情况
       if (index < 0) {
         index = 0;
       }
-      // 边界情况
       if (index > this.data[order].values.length - 1) {
         index = this.data[order].values.length - 1;
       }
+
       this.endMove(target, index, step, moveDistance, order, speed);
     },
     // 控制最后的滚动
+    /**
+     * target 目标元素
+     * index 滚动步数
+     * step 每步距离
+     * moveDistance 滚动距离
+     * order 第几列数据
+     * speed 滚动速度
+     */
     endMove(target, index = 0, step, moveDistance = 0, order = 0, speed = 200) {
       target.setAttribute("touch-end", -index * step);
       this.transformStyle(target, -index * step, true, speed);
-      // 上边界判断
-      if (moveDistance > 0 * step) {
-        index = 0;
-        this.transformStyle(target, index * step);
-        target.setAttribute("touch-end", index * step);
-      }
-      // 下边界判断
-      if (moveDistance < -(this.data[order].values.length - 1) * step) {
-        index = this.data[order].values.length - 1;
-        this.transformStyle(target, -index * step);
-        target.setAttribute("touch-end", -index * step);
-      }
+
       this.value[order] = index;
-      this.addClass(order, index);
+
+      this.changeActiveIndex(order, index);
       if (this.value.length === this.data.length) {
         // 避免重复触发change事件
         if (JSON.stringify(this.lastValue) === JSON.stringify(this.value)) {
         } else {
-          this.$emit("change", this.computeValue(this.value),JSON.parse(JSON.stringify(this.value)));
+          this.$emit(
+            "change",
+            this.computeValue(this.value),
+            JSON.parse(JSON.stringify(this.value))
+          );
           this.lastValue = JSON.parse(JSON.stringify(this.value));
         }
       }
-    },
-    
+    }
   }
 };
 </script>
