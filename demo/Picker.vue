@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="parent">
    <garen-picker :data="data" @change="handleChange" ref="picker"></garen-picker>
   </div>
 </template>
