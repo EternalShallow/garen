@@ -5,6 +5,8 @@
 + 根据slot自定义上传样式
 :::
 
+![An image](./demo.gif)
+
 ## 示例
 ---
 ```vue
