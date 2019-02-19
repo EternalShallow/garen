@@ -24,6 +24,10 @@ export default {
     multiple:{
       default:false,
       type:Boolean
+    },
+    prevent:{
+      default:false,
+      type:Boolean
     }
   },
   data() {
@@ -42,6 +46,7 @@ export default {
   },
   methods: {
     handleUpload(){
+      if(this.prevent) return;
       const upload = this.$refs.garenUpload
       upload.click()
     },

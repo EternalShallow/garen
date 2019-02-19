@@ -7,7 +7,7 @@
 <script>
 import exif from "exif-js";
 export default {
-  name:'Cropper',
+  name: "Cropper",
   props: {
     imgSrc: {},
     imgType: {
@@ -53,7 +53,7 @@ export default {
   computed: {},
   watch: {},
   mounted() {
-     this.init();
+    this.init();
   },
   methods: {
     // 确认按钮
@@ -212,14 +212,23 @@ export default {
     },
     // base64转blob
     convertBase64UrlToBlob(urlData) {
-      var bytes = window.atob(urlData.split(",")[1]); //去掉url的头，并转换为byte
-      //处理异常,将ascii码小于0的转换为大于0
-      var ab = new ArrayBuffer(bytes.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < bytes.length; i++) {
-        ia[i] = bytes.charCodeAt(i);
+      // var bytes = window.atob(urlData.split(",")[1]); //去掉url的头，并转换为byte
+      // //处理异常,将ascii码小于0的转换为大于0
+      // var ab = new ArrayBuffer(bytes.length);
+      // var ia = new Uint8Array(ab);
+      // for (var i = 0; i < bytes.length; i++) {
+      //   ia[i] = bytes.charCodeAt(i);
+      // }
+      // return new Blob([ab], { type: "image/png" });
+      let arr = urlData.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
       }
-      return new Blob([ab], { type: "image/png" });
+      return new File([u8arr], 'imagesss', { type: mime });
     },
     // 初始化
     init() {
