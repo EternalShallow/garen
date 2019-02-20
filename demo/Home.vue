@@ -6,6 +6,7 @@
           <li><router-link to="/picker">picker</router-link></li>
           <li><router-link to="/cropper">cropper</router-link></li>
           <li><router-link to="/upload">upload</router-link></li>
+          <li><router-link to="/tabs">tabs</router-link></li>
       </ul>
   </div>
 </template>
