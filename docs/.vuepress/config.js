@@ -37,9 +37,9 @@ module.exports = {
       {
         title: '代码片段',
         children: [
-          ['/', 'css'],
-          ['/', 'js'],
-          ['/', '推荐插件'],
+          ['/snippets/css/', 'css片段'],
+          ['/snippets/js/', 'js片段'],
+          ['/snippets/vue/', 'vue组件片段'],
         ]
       }
     ]
