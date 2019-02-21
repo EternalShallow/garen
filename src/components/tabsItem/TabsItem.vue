@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-    <div class="garen-tabsItem">
+    <div class="garen-tabsItem" v-show="itemVisible">
         <slot></slot>
     </div>
 </template>
@@ -16,7 +16,9 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+        itemVisible:false
+    };
   },
 
   methods: {},

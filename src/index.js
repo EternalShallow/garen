@@ -15,6 +15,7 @@ const components = [
     Tabs,
     TabsItem
 ]
+
 const garen = {
     install:(Vue)=>{
     Vue.component('garen-loadmore',Loadmore);

@@ -9,8 +9,12 @@ npm i garen -S
 import Vue from 'vue'
 import garen from 'garen'
 
-Vue.use(garen)
+Vue.use(garen)  
 
+/**
+ * 如果打包之后发现部分es6未成功编译为es5，可引用打包之后的插件
+ * import garen from 'garen/dist/main.js'
+ */
 ```
 ```javascript
 // 按需加载
@@ -21,7 +25,8 @@ import {
     Picker,
     Upload,
     Tabs,
-    Swiper
+    Swiper,
+    TabsItem
 } from 'garen'
 
 // 按需注册对应组件
@@ -31,6 +36,12 @@ Vue.component('garen-picker',Picker);
 Vue.component('garen-upload',Upload);
 Vue.component('garen-swiper',Swiper);
 Vue.component('garen-tabs',Tabs);
+Vue.component('garen-tabs-item',TabsItem);   
+
+/**
+ * 如果打包之后发现部分es6未成功编译为es5，可引用打包之后的插件
+ * import garen from 'garen/dist/main.js'
+ */
 
 ```
 
