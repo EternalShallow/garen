@@ -7,7 +7,7 @@
     <meta name="description" content="一套基于vue的移动端组件库">
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     
-    <link rel="preload" href="/garen/assets/css/0.styles.db83c49b.css" as="style"><link rel="preload" href="/garen/assets/js/app.385a4330.js" as="script"><link rel="preload" href="/garen/assets/js/10.bc5d58cd.js" as="script"><link rel="prefetch" href="/garen/assets/js/11.11973bcb.js"><link rel="prefetch" href="/garen/assets/js/12.27a40870.js"><link rel="prefetch" href="/garen/assets/js/2.cc903331.js"><link rel="prefetch" href="/garen/assets/js/3.4e269a77.js"><link rel="prefetch" href="/garen/assets/js/4.2cf3e20b.js"><link rel="prefetch" href="/garen/assets/js/5.0f707740.js"><link rel="prefetch" href="/garen/assets/js/6.2d9798d1.js"><link rel="prefetch" href="/garen/assets/js/7.c3b244a1.js"><link rel="prefetch" href="/garen/assets/js/8.f187deef.js"><link rel="prefetch" href="/garen/assets/js/9.aedb34aa.js">
+    <link rel="preload" href="/garen/assets/css/0.styles.db83c49b.css" as="style"><link rel="preload" href="/garen/assets/js/app.11ddbec3.js" as="script"><link rel="preload" href="/garen/assets/js/10.896d8b8f.js" as="script"><link rel="prefetch" href="/garen/assets/js/11.3e307ffa.js"><link rel="prefetch" href="/garen/assets/js/12.a400756d.js"><link rel="prefetch" href="/garen/assets/js/13.1e7e4134.js"><link rel="prefetch" href="/garen/assets/js/14.d495a8c8.js"><link rel="prefetch" href="/garen/assets/js/15.7812c6f3.js"><link rel="prefetch" href="/garen/assets/js/2.cf9c3a17.js"><link rel="prefetch" href="/garen/assets/js/3.f6f06443.js"><link rel="prefetch" href="/garen/assets/js/4.0eee750f.js"><link rel="prefetch" href="/garen/assets/js/5.95030420.js"><link rel="prefetch" href="/garen/assets/js/6.d961e618.js"><link rel="prefetch" href="/garen/assets/js/7.f34d37ea.js"><link rel="prefetch" href="/garen/assets/js/8.c4687623.js"><link rel="prefetch" href="/garen/assets/js/9.49673799.js">
     <link rel="stylesheet" href="/garen/assets/css/0.styles.db83c49b.css">
   </head>
   <body>
@@ -20,8 +20,12 @@
 <span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
 <span class="token keyword">import</span> garen <span class="token keyword">from</span> <span class="token string">'garen'</span>
 
-Vue<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>garen<span class="token punctuation">)</span>
+Vue<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>garen<span class="token punctuation">)</span>  
 
+<span class="token comment">/**
+ * 如果打包之后发现部分es6未成功编译为es5，可引用打包之后的插件
+ * import garen from 'garen/dist/main.js'
+ */</span>
 </code></pre></div><div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// 按需加载</span>
 <span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
 <span class="token keyword">import</span> <span class="token punctuation">{</span>
@@ -30,7 +34,8 @@ Vue<span class="token punctuation">.</span><span class="token function">use</spa
     Picker<span class="token punctuation">,</span>
     Upload<span class="token punctuation">,</span>
     Tabs<span class="token punctuation">,</span>
-    Swiper
+    Swiper<span class="token punctuation">,</span>
+    TabsItem
 <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'garen'</span>
 
 <span class="token comment">// 按需注册对应组件</span>
@@ -40,6 +45,12 @@ Vue<span class="token punctuation">.</span><span class="token function">componen
 Vue<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'garen-upload'</span><span class="token punctuation">,</span>Upload<span class="token punctuation">)</span><span class="token punctuation">;</span>
 Vue<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'garen-swiper'</span><span class="token punctuation">,</span>Swiper<span class="token punctuation">)</span><span class="token punctuation">;</span>
 Vue<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'garen-tabs'</span><span class="token punctuation">,</span>Tabs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+Vue<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'garen-tabs-item'</span><span class="token punctuation">,</span>TabsItem<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+
+<span class="token comment">/**
+ * 如果打包之后发现部分es6未成功编译为es5，可引用打包之后的插件
+ * import garen from 'garen/dist/main.js'
+ */</span>
 
 </code></pre></div><h3 id="使用cdn在script标签中单独引用"><a href="#使用cdn在script标签中单独引用" aria-hidden="true" class="header-anchor">#</a> 使用CDN在script标签中单独引用</h3> <div class="language- extra-class"><pre class="language-text"><code>// 等待更新
 </code></pre></div></div> <div class="page-edit"><!----> <!----></div> <div class="page-nav"><p class="inner"><span class="prev">
@@ -51,6 +62,6 @@ Vue<span class="token punctuation">.</span><span class="token function">componen
         </a>
         →
       </span></p></div> </div> <!----></div></div>
-    <script src="/garen/assets/js/app.385a4330.js" defer></script><script src="/garen/assets/js/10.bc5d58cd.js" defer></script>
+    <script src="/garen/assets/js/app.11ddbec3.js" defer></script><script src="/garen/assets/js/10.896d8b8f.js" defer></script>
   </body>
 </html>
