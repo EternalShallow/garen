@@ -12,6 +12,14 @@ export default {
     transitionTime: {
       type: Number,
       default: 300
+    },
+    autoPlay:{
+      type:Boolean,
+      default:true
+    },
+    touchStopAuto:{
+      type:Boolean,
+      default:true
     }
   },
   data() {
@@ -22,8 +30,8 @@ export default {
       width: 0, // swiper宽度
       index: 0, // 第几个轮播图
       isTouch: false, // 是否触摸
-      timeout:{},
-      dotIndex:0,
+      timeout: {},
+      dotIndex: 0
     };
   },
   components: {},
@@ -42,10 +50,9 @@ export default {
       this.endTouch = -this.width;
       this.transformStyle(-this.width);
 
-      this.autoPlay()
+      this.handleAutoPlay();
     },
     touchstart(e) {
-      console.log(this.index)
       this.isTouch = true;
       const sx = e.touches[0].screenX;
       this.startTouch = sx;
@@ -58,33 +65,41 @@ export default {
       const sx = e.changedTouches[0].screenX;
       this.endTouch = this.endTouch + sx - this.startTouch;
       let computedIndex = 0;
-      let timer = 200;
+      let timer = this.transitionTime;
       if (sx - this.startTouch < 0) {
+       const rate = Math.abs(Math.abs(this.endTouch / this.width)-Math.round(Math.abs(this.endTouch / this.width)))
+        timer = rate * timer
         computedIndex = Math.round(Math.abs(this.endTouch / this.width) + 0.15);
       } else {
+        const rate = Math.abs(Math.abs(this.endTouch / this.width)-Math.round(Math.abs(this.endTouch / this.width)))
+        timer = rate * timer
         computedIndex = Math.round(Math.abs(this.endTouch / this.width) - 0.15);
       }
-      let index = computedIndex - 1
-      if(index < 0){
-        index = this.length - 1
+      let index = computedIndex - 1;
+      if (index < 0) {
+        index = this.length - 1;
       }
-      if(index === this.length){
-        index = 0
+      if (index === this.length) {
+        index = 0;
       }
-      this.$emit('change',index)
-      this.dotIndex = index
+      this.$emit("change", index);
+      this.dotIndex = index;
       this.endTouch = -computedIndex * this.width;
-      this.index = computedIndex
+      this.index = computedIndex;
       this.transformStyle(-computedIndex * this.width, timer);
-      
+
       if (computedIndex >= this.length + 1) {
-        this.endTouch = -this.width
+        this.endTouch = -this.width;
       }
       if (computedIndex <= 0) {
-        this.endTouch = -this.width*this.length
+        this.endTouch = -this.width * this.length;
       }
-      this.isTouch = false
-      this.autoPlay()
+      this.isTouch = false;
+      if(this.touchStopAuto){
+        this.isTouch = true;
+        return;
+      }
+      this.handleAutoPlay();
     },
     transformStyle(move, timer) {
       const target = this.$refs.gSwiper;
@@ -95,32 +110,33 @@ export default {
         target.style.transitionDuration = timer + "ms";
       }
     },
-    autoPlay(speed) {
+    handleAutoPlay(speed) {
+      if(!this.autoPlay) return
       let autoTime = speed || this.autoTime;
-      clearTimeout(this.timeout)
+      clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         if (this.isTouch) return;
         this.index++;
-        if(this.index == this.length + 1){
-          console.log(222222)
-          
-        }
+
         if (this.index >= this.length + 2) {
           this.index = 1;
           this.transformStyle(-this.width * this.index, 0);
           this.endTouch = -this.width * this.index;
-          console.log(11111)
-          this.autoPlay(1);
+          this.handleAutoPlay(1);
         } else {
-          let index = this.index - 1
-          if(index == this.length){
-            index = 0
+          let index = this.index - 1;
+          if (index == this.length) {
+            index = 0;
           }
-          this.$emit('change',index)
-          this.dotIndex = index
+          this.$emit("change", index);
+          this.dotIndex = index;
           this.endTouch = -this.width * this.index;
+          
           this.transformStyle(-this.width * this.index, this.transitionTime);
-          this.autoPlay();
+          if (this.index == this.length + 1) {
+            this.endTouch = -this.width
+          }
+          this.handleAutoPlay();
         }
       }, autoTime);
     }
@@ -152,6 +168,7 @@ export default {
 </script>
 <style scoped>
 .garen-swiper {
+  position:relative;
   height: 100%;
   width: 100%;
   overflow: hidden;

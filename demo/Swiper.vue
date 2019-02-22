@@ -26,7 +26,8 @@ export default {
 
   methods: {
     handleChange(index){
-      console.log(index,'changeIndex')
+      let time = (new Date()).getSeconds()
+      console.log(index,time,'changeIndex')
     },
     clickfirst(){
 
