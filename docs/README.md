@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /gailun.jpg
+heroImage: /gailun.png
 actionText: 快速上手 →
 actionLink: /guide/
 features:
