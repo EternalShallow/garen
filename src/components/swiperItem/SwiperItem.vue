@@ -1,13 +1,13 @@
 <!--  -->
 <template>
-  <div class="garen-swiper-item">
+  <div @click="handleClick" class="garen-swiper-item">
       <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-
+  name:'SwiperItem',  
   props: {},
 
   data () {
@@ -15,7 +15,11 @@ export default {
     };
   },
 
-  methods: {},
+  methods: {
+      handleClick(){
+          this.$emit('click')
+      }
+  },
 
   components: {},
 

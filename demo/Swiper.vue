@@ -1,20 +1,27 @@
 
 <template>
   <div class="main">
-    <garen-swiper @change="handleChange">
-      <garen-swiper-item><img @click="clickfirst" class="swiper-img" src="https://img.zcool.cn/community/01a5e758be221da801219c7732208a.jpg@1280w_1l_2o_100sh.jpg" alt=""></garen-swiper-item>
-      <garen-swiper-item><img class="swiper-img" src="https://img.zcool.cn/community/01b90b58be222aa801219c77734f76.jpg@1280w_1l_2o_100sh.jpg" alt=""></garen-swiper-item>
-      <garen-swiper-item><img class="swiper-img" src="https://img.zcool.cn/community/0132aa58be2231a801219c77e8de4f.jpg@1280w_1l_2o_100sh.jpg" alt=""></garen-swiper-item>
-      <garen-swiper-item><img @click="clicklast" class="swiper-img" src="https://img.zcool.cn/community/01f78458be22b7a801219c770bf88c.jpg@1280w_1l_2o_100sh.jpg" alt=""></garen-swiper-item>
-    </garen-swiper>
+    <div class="swiper">
+      <garen-swiper v-if="visible" @change="handleChange">
+        <garen-swiper-item  v-for="(item,index) in swiperList" :key="index"><img class="swiper-img"  :src="item"></garen-swiper-item>
+      </garen-swiper>
+      <div class="dots">
+        <div class="dots-item" :class="{'dots-item-active':index === activeDot}" v-for="(item,index) in swiperList" :key="index"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+// TODO：功能待优化
 export default {
-  data () {
+  data() {
     return {
+      swiperList:[
         
+      ],
+      activeDot:0,
+      visible:false
     };
   },
 
@@ -22,30 +29,67 @@ export default {
 
   computed: {},
 
-  mounted(){},
+  mounted() {
+    setTimeout(()=>{
+     this.swiperList = [
+        'https://img.zcool.cn/community/01a5e758be221da801219c7732208a.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/01b90b58be222aa801219c77734f76.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/0132aa58be2231a801219c77e8de4f.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/01f78458be22b7a801219c770bf88c.jpg@1280w_1l_2o_100sh.jpg'
+      ]
+      // 数据加载完显示轮播图  
+      this.visible = true
+    },1000)
+  },
 
   methods: {
-    handleChange(index){
-      let time = (new Date()).getSeconds()
-      console.log(index,time,'changeIndex')
+    handleChange(index) {
+      this.activeDot = index
     },
-    clickfirst(){
-
+    clickImg(index) {
+      console.log(index)
     },
-    clicklast(){
-
+    splice(){
+      this.$refs.gSwiper.$forceUpdate()
+      this.$refs.gSwiper.init()
+      console.log(1)
     }
   }
-}
-
+};
 </script>
 <style scoped>
-.main{
-  width:100%;
-  height:200px;
+.main {
+  width: 100%;
+  height: 100%;
 }
-.swiper-img{
+.swiper{
+  position: relative;
   width:100%;
   height:200px;
+  overflow: hidden;
+}
+.swiper-img {
+  width: 100%;
+  height: 200px;
+}
+/* dots组建外实现 */
+.dots {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width:100%;
+  height:6px;
+  bottom: 10px;
+  left: 0;
+}
+.dots-item{
+  height:6px;
+  width:6px;
+  border-radius:100%; 
+  margin:0 3px;
+  background: #ebedf0;
+}
+.dots-item-active{
+  background: #fff;
 }
 </style>

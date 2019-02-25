@@ -6,7 +6,7 @@ export default {
     // 轮播图切换时间
     autoTime: {
       type: Number,
-      default: 2000
+      default: 3000
     },
     // 动画过度时间
     transitionTime: {
@@ -41,6 +41,17 @@ export default {
     this.init();
   },
   methods: {
+    changeKey(obj,key){
+      const newObj = {}
+      Object.keys(obj).forEach(item => {
+        if(item !== 'key'){
+          newObj[item] = obj[item]
+        }else{
+          newObj['key'] = key
+        }
+      })
+      return newObj
+    },
     init() {
       this.length = this.$children.length - 2;
       this.width = this.$el.getBoundingClientRect().width;
@@ -144,10 +155,12 @@ export default {
   render(h) {
     // 无限轮播 前后各加一轮播图
     const swipers = this.$slots.default;
-    const firstItem = this.$slots.default[0];
-    const lastItem = this.$slots.default[this.$slots.default.length - 1];
+    
+    const firstItem = this.changeKey(this.$slots.default[0],this.$slots.default[0].key + 'garenKeyF');
+    const lastItem = this.changeKey(this.$slots.default[this.$slots.default.length - 1],this.$slots.default[this.$slots.default.length - 1] + 'garenKeyL');
     swipers.push(firstItem);
     swipers.unshift(lastItem);
+    
     return h("div", { class: { "garen-swiper": true } }, [
       h(
         "div",
@@ -168,7 +181,6 @@ export default {
 </script>
 <style scoped>
 .garen-swiper {
-  position:relative;
   height: 100%;
   width: 100%;
   overflow: hidden;
