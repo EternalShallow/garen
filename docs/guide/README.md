@@ -46,6 +46,10 @@ Vue.component('garen-tabs-item',TabsItem);
 ```
 
 ### 使用CDN在script标签中单独引用
-```
-// 等待更新
+```html
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/garen/dist/main.min.js"></script>
+<script>
+  Vue.use(garen)
+</script>
 ```
