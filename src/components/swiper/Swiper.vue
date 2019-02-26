@@ -13,13 +13,13 @@ export default {
       type: Number,
       default: 300
     },
-    autoPlay:{
-      type:Boolean,
-      default:true
+    autoPlay: {
+      type: Boolean,
+      default: true
     },
-    touchStopAuto:{
-      type:Boolean,
-      default:true
+    touchStopAuto: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -41,24 +41,28 @@ export default {
     this.init();
   },
   methods: {
-    changeKey(obj,key){
-      const newObj = {}
+    changeKey(obj, key) {
+      const newObj = {};
       Object.keys(obj).forEach(item => {
-        if(item !== 'key'){
-          newObj[item] = obj[item]
-        }else{
-          newObj['key'] = key
+        if (item !== "key") {
+          newObj[item] = obj[item];
+        } else {
+          newObj["key"] = key;
         }
-      })
-      return newObj
+      });
+      return newObj;
     },
     init() {
+
+      this.startTouch = 0;
       this.length = this.$children.length - 2;
+
       this.width = this.$el.getBoundingClientRect().width;
 
       this.index = 1;
 
       this.endTouch = -this.width;
+
       this.transformStyle(-this.width);
 
       this.handleAutoPlay();
@@ -78,12 +82,18 @@ export default {
       let computedIndex = 0;
       let timer = this.transitionTime;
       if (sx - this.startTouch < 0) {
-       const rate = Math.abs(Math.abs(this.endTouch / this.width)-Math.round(Math.abs(this.endTouch / this.width)))
-        timer = rate * timer
+        const rate = Math.abs(
+          Math.abs(this.endTouch / this.width) -
+            Math.round(Math.abs(this.endTouch / this.width))
+        );
+        timer = rate * timer;
         computedIndex = Math.round(Math.abs(this.endTouch / this.width) + 0.15);
       } else {
-        const rate = Math.abs(Math.abs(this.endTouch / this.width)-Math.round(Math.abs(this.endTouch / this.width)))
-        timer = rate * timer
+        const rate = Math.abs(
+          Math.abs(this.endTouch / this.width) -
+            Math.round(Math.abs(this.endTouch / this.width))
+        );
+        timer = rate * timer;
         computedIndex = Math.round(Math.abs(this.endTouch / this.width) - 0.15);
       }
       let index = computedIndex - 1;
@@ -106,7 +116,7 @@ export default {
         this.endTouch = -this.width * this.length;
       }
       this.isTouch = false;
-      if(this.touchStopAuto){
+      if (this.touchStopAuto) {
         this.isTouch = true;
         return;
       }
@@ -122,7 +132,7 @@ export default {
       }
     },
     handleAutoPlay(speed) {
-      if(!this.autoPlay) return
+      if (!this.autoPlay) return;
       let autoTime = speed || this.autoTime;
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
@@ -142,10 +152,10 @@ export default {
           this.$emit("change", index);
           this.dotIndex = index;
           this.endTouch = -this.width * this.index;
-          
+
           this.transformStyle(-this.width * this.index, this.transitionTime);
           if (this.index == this.length + 1) {
-            this.endTouch = -this.width
+            this.endTouch = -this.width;
           }
           this.handleAutoPlay();
         }
@@ -154,13 +164,22 @@ export default {
   },
   render(h) {
     // 无限轮播 前后各加一轮播图
-    const swipers = this.$slots.default;
-    
-    const firstItem = this.changeKey(this.$slots.default[0],this.$slots.default[0].key + 'garenKeyF');
-    const lastItem = this.changeKey(this.$slots.default[this.$slots.default.length - 1],this.$slots.default[this.$slots.default.length - 1] + 'garenKeyL');
-    swipers.push(firstItem);
-    swipers.unshift(lastItem);
-    
+
+    let swipers = [];
+    if (this.$slots.default) {
+       swipers = this.$slots.default;
+      const firstItem = this.changeKey(
+        this.$slots.default[0],
+        this.$slots.default[0].key + "garenKeyF"
+      );
+      const lastItem = this.changeKey(
+        this.$slots.default[this.$slots.default.length - 1],
+        this.$slots.default[this.$slots.default.length - 1] + "garenKeyL"
+      );
+      swipers.push(firstItem);
+      swipers.unshift(lastItem);
+    }
+
     return h("div", { class: { "garen-swiper": true } }, [
       h(
         "div",

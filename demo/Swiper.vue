@@ -18,10 +18,14 @@ export default {
   data() {
     return {
       swiperList:[
-        
+        'https://img.zcool.cn/community/01a5e758be221da801219c7732208a.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/01b90b58be222aa801219c77734f76.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/0132aa58be2231a801219c77e8de4f.jpg@1280w_1l_2o_100sh.jpg',
+        'https://img.zcool.cn/community/01f78458be22b7a801219c770bf88c.jpg@1280w_1l_2o_100sh.jpg'
       ],
       activeDot:0,
-      visible:false
+      visible:true,
+      number:0,
     };
   },
 
@@ -30,16 +34,16 @@ export default {
   computed: {},
 
   mounted() {
-    setTimeout(()=>{
-     this.swiperList = [
-        'https://img.zcool.cn/community/01a5e758be221da801219c7732208a.jpg@1280w_1l_2o_100sh.jpg',
-        'https://img.zcool.cn/community/01b90b58be222aa801219c77734f76.jpg@1280w_1l_2o_100sh.jpg',
-        'https://img.zcool.cn/community/0132aa58be2231a801219c77e8de4f.jpg@1280w_1l_2o_100sh.jpg',
-        'https://img.zcool.cn/community/01f78458be22b7a801219c770bf88c.jpg@1280w_1l_2o_100sh.jpg'
-      ]
-      // 数据加载完显示轮播图  
-      this.visible = true
-    },1000)
+    // setTimeout(()=>{
+    //  this.swiperList = [
+    //     'https://img.zcool.cn/community/01a5e758be221da801219c7732208a.jpg@1280w_1l_2o_100sh.jpg',
+    //     'https://img.zcool.cn/community/01b90b58be222aa801219c77734f76.jpg@1280w_1l_2o_100sh.jpg',
+    //     'https://img.zcool.cn/community/0132aa58be2231a801219c77e8de4f.jpg@1280w_1l_2o_100sh.jpg',
+    //     'https://img.zcool.cn/community/01f78458be22b7a801219c770bf88c.jpg@1280w_1l_2o_100sh.jpg'
+    //   ]
+    //   // 数据加载完显示轮播图  
+    //   this.visible = true
+    // },1000)
   },
 
   methods: {
