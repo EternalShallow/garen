@@ -36,7 +36,8 @@ export default {
   },
   components: {},
   computed: {},
-  watch: {},
+  watch: {
+  },
   mounted() {
     this.init();
   },
@@ -53,19 +54,20 @@ export default {
       return newObj;
     },
     init() {
+      this.$nextTick(() => {
+        this.startTouch = 0;
+        this.length = this.$children.length - 2;
 
-      this.startTouch = 0;
-      this.length = this.$children.length - 2;
+        this.width = this.$el.getBoundingClientRect().width;
 
-      this.width = this.$el.getBoundingClientRect().width;
+        this.index = 1;
 
-      this.index = 1;
+        this.endTouch = -this.width;
 
-      this.endTouch = -this.width;
+        this.transformStyle(-this.width);
 
-      this.transformStyle(-this.width);
-
-      this.handleAutoPlay();
+        this.handleAutoPlay();
+      });
     },
     touchstart(e) {
       this.isTouch = true;
@@ -167,7 +169,7 @@ export default {
 
     let swipers = [];
     if (this.$slots.default) {
-       swipers = this.$slots.default;
+      swipers = this.$slots.default;
       const firstItem = this.changeKey(
         this.$slots.default[0],
         this.$slots.default[0].key + "garenKeyF"
