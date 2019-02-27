@@ -22,7 +22,7 @@ const TOPSTATUS = {
   pulling: "pulling", // 下拉
   limit: "limit", // 超过触发值
   loading: "loading", // 正在加载
-  complete: "templete" // 刷新完成
+  complete: "complete" // 刷新完成
 };
 const BOTTOMSTATUS = {
   wait: "wait", // 等待

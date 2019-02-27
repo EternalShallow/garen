@@ -10,6 +10,7 @@
                         @bottom-method="handleBottom" 
                         @bottom-status-change="handleBottomStatusChange" 
                         @bottom-error-click="handleBottomError"
+                        :event-scroll="eventScroll"
                         :disable-top="false" :disable-bottom="false">
             <div class="item" v-for="(item,index) in dataList" :key="index">{{index}}</div>
         </garen-loadmore>
@@ -106,6 +107,9 @@ export default {
     },
     handleBottomError(){
         this.handleBottom()
+    },
+    eventScroll(){
+      console.log('scroll')
     }
   },
   mounted() {
