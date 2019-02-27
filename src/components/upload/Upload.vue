@@ -2,7 +2,7 @@
   <div @click="handleUpload">
     <input 
       :style="{height:0,width:0,display:'none',overflow:'hidden'}" 
-      ref="garenUpload" type="file" :accept="accept" :capture:="capture" :multiple="multiple"
+      ref="garenUpload" type="file" :accept="accept" :capture="capture" :multiple="multiple"
       @change="handleChange"
       >
     <slot></slot>
