@@ -33,6 +33,7 @@ export default {
     getChildTitle() {
       const titles = this.$children.map(item => item.title);
       this.titles = titles;
+      if(this.$children.length !== 0)
       this.$children[0].itemVisible = true;
     },
     handleClick(index) {
