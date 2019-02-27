@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'Garen 盖伦UI',
-  description: '一套基于vue的移动端组件库',
+  title: 'Garen UI',
+  description: '一套vue移动端组件库',
   base: '/garen/',
   head: [
     ['link', {
