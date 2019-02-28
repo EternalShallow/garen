@@ -69,6 +69,7 @@ export default {
         reader.onload = ()=>{
           this.visible = true; 
           this.imgSrc = reader.result;
+          console.log(reader.result)
           // imgSrc已获取，开始初始化渲染图片
           this.$nextTick(()=>{
             this.$refs.cropper.init();
