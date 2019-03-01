@@ -21,11 +21,6 @@ import Vue from 'vue'
 import garen from 'garen'
 
 Vue.use(garen)  
-
-/**
- * 如果打包之后发现部分es6未成功编译为es5，可引用打包之后的插件
- * import garen from 'garen/dist/main.js'
- */
 ```
 Using a script tag for global use:
 ```html

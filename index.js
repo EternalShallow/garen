@@ -4,7 +4,7 @@ import App from './demo/App.vue';
 import './tools/rem.js'
 import './tools/reset.css'
 
-import garen from './src/index.js'
+import garen,{Loadmore} from './src/index.js'
 
 Vue.use(garen)
 
