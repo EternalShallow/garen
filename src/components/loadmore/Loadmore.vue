@@ -262,11 +262,15 @@ export default {
         this.startScreenY = 0;
       }
     },
+    // TODO:完成时间1s
     // 下拉数据加载完
-    onTopLoaded() {
-      this.transformStyle(this.$refs.content, 0, true);
+    onTopLoaded(time = 0) {
+      setTimeout(()=>{
+        this.transformStyle(this.$refs.content, 0, true);
+        this.startScreenY = 0;
+      },time)
       this.topStatus = TOPSTATUS.complete;
-      this.startScreenY = 0;
+      
     },
     // 上拉数据加载完
     onBottomLoaded(flag = true) {
